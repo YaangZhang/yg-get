@@ -137,7 +137,6 @@ public class YouTuBeSpider extends AbstractSpider {
                 if (contents != null && !contents.isEmpty()) {
                     JSONObject contentsObj = (JSONObject) JSON.parse(contents);
                     String twoColumnResults = contentsObj.getString("twoColumnBrowseResultsRenderer");
-
                     JSONObject twoColumnResultsObj = (JSONObject) JSON.parse(twoColumnResults);
                     String tabsObj = twoColumnResultsObj.getString("tabs");
                     JSONArray tabArrs = (JSONArray) JSON.parse(tabsObj);
@@ -156,7 +155,6 @@ public class YouTuBeSpider extends AbstractSpider {
                         JSONArray contentsJSONArray = itemSectionObj.getJSONArray("contents");
                         JSONObject contentsJSONObject = contentsJSONArray.getJSONObject(0);
                         String gridRenderer = contentsJSONObject.getString("gridRenderer");
-
                         JSONObject gridRendererObj = (JSONObject) JSON.parse(gridRenderer);
                         itemsJSONArray = gridRendererObj.getJSONArray("items");
                     }
@@ -171,6 +169,29 @@ public class YouTuBeSpider extends AbstractSpider {
                     }
                 if (itemsJSONArray != null) {
                     System.out.println("itemsJSONArray : "+itemsJSONArray.toString());
+                    for (int i = 0; i < itemsJSONArray.size(); i++) {
+                        JSONObject jsonObject = itemsJSONArray.getJSONObject(i);
+                        JSONObject gridVideoRenderer = jsonObject.getJSONObject("gridVideoRenderer");
+                        JSONObject thumbnail = gridVideoRenderer.getJSONObject("thumbnail");
+                        JSONObject titleObj = gridVideoRenderer.getJSONObject("title");
+                        JSONObject publishedTimeText = gridVideoRenderer.getJSONObject("publishedTimeText");
+                        JSONObject navigationEndpoint = gridVideoRenderer.getJSONObject("navigationEndpoint");
+                        JSONArray thumbnailOverlays = gridVideoRenderer.getJSONArray("thumbnailOverlays");
+                        JSONArray thumbnails = thumbnail.getJSONArray("thumbnails");// 图片
+
+                        JSONArray runsJSONArray = titleObj.getJSONArray("runs");
+                        JSONObject runString = runsJSONArray.getJSONObject(0);
+                        String title = runString.getString("text");
+                        String simpleText = publishedTimeText.getString("simpleText");
+                        JSONObject commandMetadata = navigationEndpoint.getJSONObject("commandMetadata");
+                        JSONObject webCommandMetadata = commandMetadata.getJSONObject("webCommandMetadata");
+                        String url = webCommandMetadata.getString("url");
+                        JSONObject overlaysJSONObject = thumbnailOverlays.getJSONObject(0);
+                        JSONObject renderer = overlaysJSONObject.getJSONObject("thumbnailOverlayTimeStatusRenderer");
+                        JSONObject text = renderer.getJSONObject("text");
+                        String time = text.getString("simpleText");
+
+                    }
                 }
             }
 
